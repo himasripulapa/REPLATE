@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Live Listings — Replate</title>
+<link rel="stylesheet" href="replate-shared.css"/>
+<style>
+.listings-wrap{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+/* filter tabs */
+.filter-tabs{
+  display:flex;gap:0.3rem;
+  background:white;border:1px solid var(--border);
+  border-radius:100px;padding:0.25rem;
+  width:fit-content;margin-bottom:2rem;
+}
+.ftab{
+  padding:0.4rem 1rem;border-radius:100px;
+  font-size:0.82rem;font-weight:600;border:none;
+  background:none;color:var(--muted);cursor:pointer;
+  transition:all 0.15s;
+}
+.ftab.active{background:var(--ink);color:white;}
+.ftab:hover:not(.active){color:var(--ink);}
+
+/* cards grid */
+.listings-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1.25rem;
+}
+
+.listing-card{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  padding:1.25rem 1.5rem;
+  transition:box-shadow 0.15s,transform 0.15s;
+  position:relative;
+}
+.listing-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+
+.listing-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.25rem;}
+.listing-title{font-weight:700;font-size:1rem;color:var(--ink);}
+.listing-reporter{font-size:0.78rem;color:var(--muted);}
+
+.listing-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:1rem 0;}
+.lstat{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--ink2);}
+.lstat-ico{font-size:0.9rem;}
+
+.listing-address{font-size:0.78rem;color:var(--muted);line-height:1.5;margin:0.25rem 0 0.75rem;}
+
+.listing-dot{
+  width:8px;height:8px;border-radius:50%;
+  position:absolute;left:1.25rem;top:50%;transform:translateY(-50%);
+}
+
+/* empty state */
+.empty-state{
+  text-align:center;padding:4rem 2rem;
+  color:var(--muted);
+  grid-column:1/-1;
+}
+.empty-ico{font-size:3rem;margin-bottom:1rem;}
+.empty-title{font-weight:700;font-size:1rem;color:var(--ink2);margin-bottom:0.5rem;}
+
+/* live pulse */
+.live-badge{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.72rem;font-weight:700;color:var(--green-dark);
+  margin-bottom:0.75rem;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.4s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-ico">🌿</div>
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">Replate</div>
+      <div class="nav-brand-tagline">Rescue food. Feed people.</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 <span>Home</span></a>
+    <a href="report.html" class="nav-link">➕ <span>Report Food</span></a>
+    <a href="listings.html" class="nav-link active">📍 <span>Live Listings</span></a>
+    <a href="ngo.html" class="nav-link">🏢 <span>NGO Dashboard</span></a>
+    <a href="volunteer.html" class="nav-link">🚗 <span>Volunteer</span></a>
+    <a href="impact.html" class="nav-link">📊 <span>Impact</span></a>
+  </div>
+</nav>
+
+<div class="listings-wrap fade-up">
+  <div class="live-badge"><span class="live-dot"></span> LIVE FEED</div>
+  <h1 style="font-size:2rem;font-weight:800;color:var(--ink);margin-bottom:0.3rem;">Live Food Listings</h1>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.75rem;">Track availability, expiry timer, NGO acceptance, and delivery status in real-time.</p>
+
+  <div class="filter-tabs">
+    <button class="ftab active" onclick="filterListings('All', this)">All</button>
+    <button class="ftab" onclick="filterListings('Available', this)">Available</button>
+    <button class="ftab" onclick="filterListings('Active', this)">Active</button>
+    <button class="ftab" onclick="filterListings('Delivered', this)">Delivered</button>
+    <button class="ftab" onclick="filterListings('Expired', this)">Expired</button>
+  </div>
+
+  <div class="listings-grid" id="listings-grid">
+    <div class="empty-state">
+      <div class="empty-ico">🔍</div>
+      <div class="empty-title">Loading listings...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Default seed data
+const seedData = [
+  { id:'seed1', event:'Sharma Wedding', name:'Priya Sharma', foodType:'Veg Meals', qty:120, unit:'plates', addr:'Church Street, Bengaluru', city:'Bengaluru', lat:12.9716, lng:77.5946, expires: new Date(Date.now() - 1000*60*60).toISOString(), peopleFed:130, wasteKg:65, status:'Delivered', submittedAt: new Date(Date.now() - 3*60*60*1000).toISOString() },
+  { id:'seed2', event:'Community Lunch', name:'Sree Kumar', foodType:'Veg Meals', qty:50, unit:'plates', addr:'flat no:101, srivani nagar, second apartment to left, opp venkatadhri residency, beside srinandam nilayam, behind transfromer, vijaywada', city:'Vijayawada', lat:16.5062, lng:80.6480, expires: new Date(Date.now() + 27*60*60*1000).toISOString(), peopleFed:50, wasteKg:17.5, status:'Delivered', submittedAt: new Date(Date.now() - 1*60*60*1000).toISOString() },
+];
+
+let currentFilter = 'All';
+
+function getReports() {
+  const stored = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  return [...seedData, ...stored];
+}
+
+function getExpiryInfo(expiresStr) {
+  if (!expiresStr) return { label: 'Unknown', cls: 'expiry-ok' };
+  const exp = new Date(expiresStr);
+  const now = new Date();
+  const diff = Math.round((exp - now) / 60000);
+  if (diff <= 0) return { label: 'Expired', cls: 'expiry-expired' };
+  const h = Math.floor(diff / 60), m = diff % 60, s = Math.floor((exp - now) / 1000) % 60;
+  const label = h > 0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
+  return { label, cls: diff < 90 ? 'expiry-urgent' : 'expiry-ok' };
+}
+
+function getStatusBadge(status) {
+  const map = {
+    'Available': 'badge-green',
+    'Active':    'badge-yellow',
+    'Delivered': 'badge-gray',
+    'Expired':   'badge-red',
+    'Accepted':  'badge-yellow',
+  };
+  return map[status] || 'badge-gray';
+}
+
+function filterListings(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderListings();
+}
+
+function renderListings() {
+  const reports = getReports();
+  const grid = document.getElementById('listings-grid');
+
+  let filtered = reports;
+  if (currentFilter !== 'All') {
+    filtered = reports.filter(r => {
+      if (currentFilter === 'Expired') {
+        return r.status === 'Expired' || new Date(r.expires) < new Date();
+      }
+      return r.status === currentFilter;
+    });
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-ico">🍽️</div>
+      <div class="empty-title">No ${currentFilter.toLowerCase()} listings right now</div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.25rem;">Check back soon or <a href="report.html" style="color:var(--green);font-weight:600;">report food</a></p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(r => {
+    const exp = getExpiryInfo(r.expires);
+    const isExpired = new Date(r.expires) < new Date() || r.status === 'Expired';
+    const statusCls = getStatusBadge(r.status);
+    const distanceText = r.distFromNgo ? `Distance from NGO: ${r.distFromNgo} km` : '';
+
+    return `<div class="listing-card">
+      <div class="listing-card-top">
+        <div>
+          <div class="listing-title">${r.foodType}</div>
+          <div class="listing-reporter">Reporter: ${r.name || r.event}</div>
+        </div>
+        <span class="badge ${statusCls}">${r.status}</span>
+      </div>
+      <div class="listing-stats">
+        <div class="lstat"><span class="lstat-ico">🍽️</span> ${r.qty} ${r.unit}</div>
+        <div class="lstat"><span class="lstat-ico">👥</span> People fed: ${r.peopleFed || Math.round(r.qty * 0.95)}</div>
+        <div class="lstat" style="grid-column:1/-1">
+          <span class="lstat-ico">📍</span>
+          <span style="font-size:0.75rem;color:var(--muted);">${r.addr}</span>
+        </div>
+        <div class="lstat"><span class="lstat-ico">♻️</span> Waste reduced: ${r.wasteKg || (r.qty * 0.35).toFixed(1)} kg</div>
+      </div>
+      <span class="expiry-badge ${isExpired ? 'expiry-expired' : exp.cls}" id="exp-${r.id}">
+        ⏰ Expires in: ${isExpired ? 'Expired' : exp.label}
+      </span>
+      ${distanceText ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;">${distanceText}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// Live countdown
+function tickTimers() {
+  const reports = getReports();
+  reports.forEach(r => {
+    const el = document.getElementById('exp-' + r.id);
+    if (!el) return;
+    const exp = getExpiryInfo(r.expires);
+    const isExpired = new Date(r.expires) < new Date() || r.status === 'Expired';
+    el.textContent = `⏰ Expires in: ${isExpired ? 'Expired' : exp.label}`;
+    el.className = `expiry-badge ${isExpired ? 'expiry-expired' : exp.cls}`;
+  });
+}
+
+renderListings();
+setInterval(tickTimers, 1000);
+
+// Re-render when storage changes (from report page)
+window.addEventListener('storage', renderListings);
+</script>
+</body>
+</html>
