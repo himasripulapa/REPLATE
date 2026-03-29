@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Report Food — Replate</title>
+<link rel="stylesheet" href="replate-shared.css"/>
+<style>
+.report-wrap{max-width:860px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+.form-card{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.form-card-header{
+  padding:1.5rem 2rem;border-bottom:1px solid var(--border);
+  background:white;
+}
+.form-card-title{font-size:1.4rem;font-weight:800;color:var(--ink);}
+.form-card-steps{font-size:0.78rem;color:var(--muted);margin-top:0.25rem;}
+
+.form-body{padding:1.75rem 2rem;}
+
+.section-divider{
+  font-size:0.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--muted);
+  margin:1.5rem 0 1rem;padding-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+}
+
+.submit-row{
+  padding:1.25rem 2rem;background:#f9fafb;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+
+.btn-submit-main{
+  background:var(--green);color:white;
+  padding:0.75rem 2.5rem;border-radius:8px;
+  font-size:0.92rem;font-weight:700;border:none;cursor:pointer;
+  transition:all 0.2s;width:100%;max-width:320px;
+}
+.btn-submit-main:hover{background:var(--green-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(22,163,74,0.3);}
+
+/* success */
+.success-box{
+  display:none;
+  background:var(--green-light);border:1.5px solid #86efac;
+  border-radius:var(--radius);padding:1.5rem;
+  margin-top:1.25rem;text-align:center;
+}
+.success-box.show{display:block;}
+.success-ico{font-size:2.5rem;margin-bottom:0.5rem;}
+.success-title{font-weight:800;font-size:1.1rem;color:var(--green-dark);}
+.success-sub{font-size:0.85rem;color:var(--muted);margin-top:0.25rem;}
+.success-actions{display:flex;gap:0.75rem;justify-content:center;margin-top:1rem;}
+
+/* volunteer toggle */
+.vol-toggle{
+  display:flex;align-items:center;gap:0.85rem;
+  padding:1rem;border-radius:10px;
+  border:1.5px solid var(--border);background:white;
+  cursor:pointer;transition:all 0.2s;
+}
+.vol-toggle.on{border-color:var(--green);background:var(--green-light);}
+.toggle-sw{width:44px;height:24px;border-radius:12px;background:#d1d5db;position:relative;transition:background 0.2s;flex-shrink:0;}
+.vol-toggle.on .toggle-sw{background:var(--green);}
+.toggle-knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.vol-toggle.on .toggle-knob{transform:translateX(20px);}
+
+/* lat lng hint */
+.coord-hint{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;}
+.coord-hint a{color:var(--green);cursor:pointer;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-ico">🌿</div>
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">Replate</div>
+      <div class="nav-brand-tagline">Rescue food. Feed people.</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 <span>Home</span></a>
+    <a href="report.html" class="nav-link active">➕ <span>Report Food</span></a>
+    <a href="listings.html" class="nav-link">📍 <span>Live Listings</span></a>
+    <a href="ngo.html" class="nav-link">🏢 <span>NGO Dashboard</span></a>
+    <a href="volunteer.html" class="nav-link">🚗 <span>Volunteer</span></a>
+    <a href="impact.html" class="nav-link">📊 <span>Impact</span></a>
+  </div>
+</nav>
+
+<div class="report-wrap fade-up">
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-title">Report Leftover Food</div>
+      <div class="form-card-steps">Step 1: Add details • Step 2: Set expiry • Step 3: Match nearby NGOs</div>
+    </div>
+
+    <div class="form-body">
+
+      <!-- Reporter Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Reporter Name</label>
+          <input type="text" id="r-name" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="r-phone" placeholder="+91 98765 43210"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Reporter Type</label>
+          <select id="r-type">
+            <option>Event Host</option>
+            <option>Passerby / Reporter</option>
+            <option>Restaurant / Hotel</option>
+            <option>Temple / Religious Event</option>
+            <option>Corporate</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Event Name (optional)</label>
+          <input type="text" id="r-event" placeholder="Wedding reception"/>
+        </div>
+      </div>
+
+      <!-- Food Details -->
+      <div class="section-divider">Food Details</div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>Food Type</label>
+          <select id="r-food-type">
+            <option>Veg Meals</option>
+            <option>Non-Veg Meals</option>
+            <option>Rice / Biryani</option>
+            <option>Bread / Roti</option>
+            <option>Sweets / Desserts</option>
+            <option>Snacks</option>
+            <option>Mixed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity (meals)</label>
+          <input type="number" id="r-qty" placeholder="50" min="1"/>
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <input type="text" id="r-unit" value="plates" placeholder="plates / kg / packets"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Weight (kg optional)</label>
+          <input type="number" id="r-weight" placeholder="e.g. 20"/>
+        </div>
+        <div class="form-group">
+          <label>Search Radius (km)</label>
+          <input type="number" id="r-radius" value="12" min="1" max="50"/>
+        </div>
+      </div>
+
+      <!-- Timing -->
+      <div class="section-divider">Pickup & Expiry</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pickup Time</label>
+          <input type="datetime-local" id="r-pickup"/>
+        </div>
+        <div class="form-group">
+          <label>Expiry Time</label>
+          <input type="datetime-local" id="r-expires"/>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="section-divider">Location</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pickup Address</label>
+          <input type="text" id="r-addr" placeholder="Full address with landmark"/>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="r-city" value="Hyderabad" placeholder="City"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Latitude</label>
+          <input type="number" id="r-lat" placeholder="17.3850" step="0.0001"/>
+          <div class="coord-hint">Don't know? <a onclick="getLocation()">Use my current location</a></div>
+        </div>
+        <div class="form-group">
+          <label>Longitude</label>
+          <input type="number" id="r-lng" placeholder="78.4867" step="0.0001"/>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="section-divider">Additional Information</div>
+
+      <div class="form-group">
+        <label>Food Details / Notes</label>
+        <textarea id="r-notes" rows="3" placeholder="Any allergens, packaging, access instructions, contact on arrival..."></textarea>
+      </div>
+
+      <!-- Volunteer toggle -->
+      <div class="vol-toggle on" id="vol-tog" onclick="toggleVol()">
+        <div class="toggle-sw"><div class="toggle-knob"></div></div>
+        <div>
+          <div style="font-weight:600;font-size:0.88rem;color:var(--ink);">Request a Volunteer for Delivery</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.1rem;">A nearby volunteer will pick up and deliver to the NGO</div>
+        </div>
+        <span id="vol-lbl" style="margin-left:auto;font-size:0.78rem;font-weight:700;color:var(--green-dark);">ON</span>
+      </div>
+
+    </div>
+
+    <div class="submit-row">
+      <div style="font-size:0.78rem;color:var(--muted);">All fields marked are required</div>
+      <button class="btn-submit-main" onclick="submitReport()">🌿 Notify Nearby NGOs</button>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-box" id="success-box">
+    <div class="success-ico">✅</div>
+    <div class="success-title">Food Report Submitted!</div>
+    <div class="success-sub" id="success-msg">NGOs near your location have been notified. A volunteer will be assigned shortly.</div>
+    <div class="success-actions">
+      <a href="listings.html" class="btn btn-green">View Live Listings →</a>
+      <a href="ngo.html" class="btn btn-outline">NGO Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let volOn = true;
+function toggleVol() {
+  volOn = !volOn;
+  document.getElementById('vol-tog').classList.toggle('on', volOn);
+  document.getElementById('vol-lbl').textContent = volOn ? 'ON' : 'OFF';
+  document.getElementById('vol-lbl').style.color = volOn ? 'var(--green-dark)' : 'var(--muted)';
+}
+
+function getLocation() {
+  if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById('r-lat').value = pos.coords.latitude.toFixed(4);
+    document.getElementById('r-lng').value = pos.coords.longitude.toFixed(4);
+  }, () => alert('Could not get location. Please enter manually.'));
+}
+
+function submitReport() {
+  const name    = document.getElementById('r-name').value.trim();
+  const phone   = document.getElementById('r-phone').value.trim();
+  const qty     = document.getElementById('r-qty').value.trim();
+  const addr    = document.getElementById('r-addr').value.trim();
+  const expires = document.getElementById('r-expires').value;
+
+  if (!name)    { alert('Please enter your name.'); return; }
+  if (!phone)   { alert('Please enter your phone number.'); return; }
+  if (!qty)     { alert('Please enter food quantity.'); return; }
+  if (!addr)    { alert('Please enter the pickup address.'); return; }
+  if (!expires) { alert('Please set an expiry time.'); return; }
+
+  // Build report object
+  const report = {
+    id: 'rp-' + Date.now(),
+    name,
+    phone,
+    type: document.getElementById('r-type').value,
+    event: document.getElementById('r-event').value || 'Food Report',
+    foodType: document.getElementById('r-food-type').value,
+    qty: parseInt(qty),
+    unit: document.getElementById('r-unit').value || 'plates',
+    weight: document.getElementById('r-weight').value || '',
+    radius: document.getElementById('r-radius').value || 12,
+    pickup: document.getElementById('r-pickup').value,
+    expires,
+    addr,
+    city: document.getElementById('r-city').value || 'Hyderabad',
+    lat: parseFloat(document.getElementById('r-lat').value) || (17.385 + (Math.random()-0.5)*0.08),
+    lng: parseFloat(document.getElementById('r-lng').value) || (78.486 + (Math.random()-0.5)*0.08),
+    notes: document.getElementById('r-notes').value,
+    volunteer: volOn,
+    status: 'Available',
+    submittedAt: new Date().toISOString(),
+    peopleFed: Math.round(parseInt(qty) * 0.95),
+    wasteKg: +(parseInt(qty) * 0.35).toFixed(1),
+  };
+
+  // Save to localStorage
+  const reports = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  reports.unshift(report);
+  localStorage.setItem('replate_reports', JSON.stringify(reports));
+
+  // Update stats
+  const stats = JSON.parse(localStorage.getItem('replate_stats') || '{}');
+  stats.meals   = (stats.meals  || 2340) + parseInt(qty);
+  stats.people  = (stats.people || 1120) + report.peopleFed;
+  stats.kg      = (stats.kg     || 850)  + report.wasteKg;
+  stats.rescues = (stats.rescues|| 14)   + 1;
+  localStorage.setItem('replate_stats', JSON.stringify(stats));
+
+  document.getElementById('success-msg').textContent =
+    `"${report.foodType}" (${qty} ${report.unit}) from ${addr.split(',')[0]} — NGOs within ${report.radius} km have been alerted!`;
+  document.getElementById('success-box').classList.add('show');
+  document.getElementById('success-box').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
