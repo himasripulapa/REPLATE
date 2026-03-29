@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Volunteer — Replate</title>
+<link rel="stylesheet" href="replate-shared.css"/>
+<style>
+.vol-wrap{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+.vol-select-row{
+  display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;
+}
+.vol-select-row label{font-size:0.85rem;font-weight:700;color:var(--ink2);white-space:nowrap;}
+.vol-select{
+  background:white;border:1.5px solid var(--border);border-radius:8px;
+  padding:0.6rem 2.5rem 0.6rem 0.9rem;
+  font-family:'Inter',sans-serif;font-size:0.88rem;color:var(--ink);
+  outline:none;cursor:pointer;min-width:260px;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.85rem center;
+  transition:border-color 0.15s;
+}
+.vol-select:focus{border-color:var(--green);}
+
+/* volunteer profile card */
+.vol-profile{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  padding:1.25rem 1.5rem;margin-bottom:1.75rem;
+  display:flex;align-items:center;gap:1.25rem;
+}
+.vol-avatar{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--green-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+.vol-name{font-weight:700;font-size:1rem;color:var(--ink);}
+.vol-meta{font-size:0.78rem;color:var(--muted);margin-top:0.15rem;}
+.vol-stats-inline{display:flex;gap:1.5rem;margin-left:auto;}
+.vsi{text-align:center;}
+.vsi-num{font-weight:800;font-size:1.1rem;color:var(--ink);}
+.vsi-label{font-size:0.68rem;color:var(--muted);font-weight:500;}
+
+/* deliveries grid */
+.del-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;}
+
+.del-card{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  overflow:hidden;transition:box-shadow 0.15s;
+}
+.del-card:hover{box-shadow:var(--shadow-md);}
+
+.del-card-body{padding:1.25rem 1.5rem;}
+.del-card-title{font-weight:700;font-size:1rem;color:var(--ink);}
+.del-card-reporter{font-size:0.78rem;color:var(--muted);margin-top:0.1rem;}
+
+.del-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.85rem 0;}
+.dstat{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--ink2);}
+
+.del-address{font-size:0.75rem;color:var(--muted);line-height:1.5;margin:0.25rem 0;}
+
+.del-card-footer{
+  padding:0.85rem 1.5rem;background:#f9fafb;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+
+.btn-take-del{
+  background:var(--green);color:white;border:none;
+  padding:0.45rem 1rem;border-radius:6px;
+  font-size:0.8rem;font-weight:600;cursor:pointer;
+  transition:all 0.15s;font-family:'Inter',sans-serif;
+}
+.btn-take-del:hover{background:var(--green-dark);}
+.btn-take-del:disabled{background:#9ca3af;cursor:default;}
+
+.empty-state{text-align:center;padding:4rem 2rem;grid-column:1/-1;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-ico">🌿</div>
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">Replate</div>
+      <div class="nav-brand-tagline">Rescue food. Feed people.</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 <span>Home</span></a>
+    <a href="report.html" class="nav-link">➕ <span>Report Food</span></a>
+    <a href="listings.html" class="nav-link">📍 <span>Live Listings</span></a>
+    <a href="ngo.html" class="nav-link">🏢 <span>NGO Dashboard</span></a>
+    <a href="volunteer.html" class="nav-link active">🚗 <span>Volunteer</span></a>
+    <a href="impact.html" class="nav-link">📊 <span>Impact</span></a>
+  </div>
+</nav>
+
+<div class="vol-wrap fade-up">
+
+  <!-- Volunteer Selector -->
+  <div class="vol-select-row">
+    <label>Select Volunteer</label>
+    <select class="vol-select" id="vol-select" onchange="loadVolunteer()">
+      <option value="Maya Das">Maya Das</option>
+      <option value="Arjun Reddy">Arjun Reddy</option>
+      <option value="Priya Sharma">Priya Sharma</option>
+      <option value="Ravi Kumar">Ravi Kumar</option>
+      <option value="Sneha Patel">Sneha Patel</option>
+    </select>
+  </div>
+
+  <!-- Volunteer profile -->
+  <div class="vol-profile" id="vol-profile">
+    <div class="vol-avatar">👤</div>
+    <div>
+      <div class="vol-name" id="vp-name">Maya Das</div>
+      <div class="vol-meta" id="vp-meta">⭐ 4.8 rating · Active Volunteer · Hyderabad</div>
+    </div>
+    <div class="vol-stats-inline">
+      <div class="vsi"><div class="vsi-num" id="vp-deliveries">0</div><div class="vsi-label">Deliveries</div></div>
+      <div class="vsi"><div class="vsi-num" id="vp-fed">0</div><div class="vsi-label">People Fed</div></div>
+      <div class="vsi"><div class="vsi-num" id="vp-kg">0 kg</div><div class="vsi-label">Waste Saved</div></div>
+    </div>
+  </div>
+
+  <!-- Deliveries -->
+  <h2 style="font-size:1rem;font-weight:700;color:var(--ink2);margin-bottom:1rem;">Available Deliveries</h2>
+  <div class="del-grid" id="del-grid">
+    <div class="empty-state">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">🚗</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--ink2);">No deliveries available</div>
+      <p style="font-size:0.82rem;margin-top:0.25rem;">Deliveries appear here when NGOs accept food reports.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const VOLUNTEER_PROFILES = {
+  'Maya Das':    { rating:'4.8', deliveries:19, fed:920, kg:340 },
+  'Arjun Reddy': { rating:'4.9', deliveries:28, fed:1380, kg:510 },
+  'Priya Sharma':{ rating:'4.7', deliveries:15, fed:720, kg:265 },
+  'Ravi Kumar':  { rating:'4.6', deliveries:11, fed:530, kg:196 },
+  'Sneha Patel': { rating:'5.0', deliveries:32, fed:1560, kg:577 },
+};
+
+const seedData = [
+  { id:'seed1', event:'Sharma Wedding', name:'Riya Event Manager', foodType:'Veg Meals', qty:120, unit:'plates', addr:'Church Street, Bengaluru', city:'Bengaluru', lat:12.9716, lng:77.5946, expires: new Date(Date.now()-1000*60*60).toISOString(), peopleFed:130, wasteKg:65, status:'Delivered' },
+  { id:'seed2', event:'Community Lunch', name:'sree', foodType:'Veg Meals', qty:50, unit:'plates', addr:'flat no:101, srivani nagar, second apartment to left, opp venkatadhri residency, beside srinandam nilayam, behind transfromer, vijaywada', city:'Vijayawada', lat:16.5062, lng:80.6480, expires: new Date(Date.now()+27*60*60*1000).toISOString(), peopleFed:50, wasteKg:17.5, status:'Delivered' },
+];
+
+let takenIds = JSON.parse(localStorage.getItem('vol_taken') || '[]');
+
+function getExpiryInfo(expiresStr) {
+  if (!expiresStr) return { label:'Unknown', cls:'expiry-ok' };
+  const exp = new Date(expiresStr);
+  const now = new Date();
+  const diff = Math.round((exp - now) / 60000);
+  if (diff <= 0) return { label:'Expired', cls:'expiry-expired' };
+  const h = Math.floor(diff/60), m = diff%60, s = Math.floor((exp-now)/1000)%60;
+  const label = h>0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
+  return { label, cls: diff<90?'expiry-urgent':'expiry-ok' };
+}
+
+function loadVolunteer() {
+  const name = document.getElementById('vol-select').value;
+  const profile = VOLUNTEER_PROFILES[name] || {};
+
+  document.getElementById('vp-name').textContent = name;
+  document.getElementById('vp-meta').textContent = `⭐ ${profile.rating} rating · Active Volunteer`;
+  document.getElementById('vp-deliveries').textContent = profile.deliveries || 0;
+  document.getElementById('vp-fed').textContent = (profile.fed || 0).toLocaleString();
+  document.getElementById('vp-kg').textContent = (profile.kg || 0) + ' kg';
+
+  const stored = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  const all = [...seedData, ...stored];
+
+  if (all.length === 0) {
+    document.getElementById('del-grid').innerHTML = `<div class="empty-state">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">🚗</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--ink2);">No deliveries available</div>
+      <p style="font-size:0.82rem;margin-top:0.25rem;">Check back when food reports are submitted.</p>
+    </div>`;
+    return;
+  }
+
+  document.getElementById('del-grid').innerHTML = all.map(r => {
+    const e = getExpiryInfo(r.expires);
+    const taken = takenIds.includes(r.id);
+    const isDelivered = r.status === 'Delivered' || taken;
+
+    return `<div class="del-card">
+      <div class="del-card-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="del-card-title">${r.foodType}</div>
+            <div class="del-card-reporter">Reporter: ${r.name || r.event}</div>
+          </div>
+          <span class="badge ${isDelivered ? 'badge-gray' : 'badge-green'}">${isDelivered ? 'Delivered' : 'Available'}</span>
+        </div>
+        <div class="del-stats">
+          <div class="dstat">🍽️ ${r.qty} ${r.unit}</div>
+          <div class="dstat">👥 People fed: ${r.peopleFed || Math.round(r.qty*0.95)}</div>
+          <div class="dstat" style="grid-column:1/-1;">
+            <span>📍</span>
+            <span class="del-address">${r.addr}</span>
+          </div>
+          <div class="dstat">♻️ Waste reduced: ${r.wasteKg || (r.qty*0.35).toFixed(1)} kg</div>
+        </div>
+        <span class="expiry-badge ${e.cls}" id="vol-exp-${r.id}">⏰ Expires in: ${e.label}</span>
+      </div>
+      <div class="del-card-footer">
+        <span style="font-size:0.75rem;color:var(--muted);">${r.city || 'Hyderabad'}</span>
+        <button class="btn-take-del" id="btn-take-${r.id}" onclick="takeDelivery('${r.id}')" ${isDelivered ? 'disabled' : ''}>
+          ${isDelivered ? '✓ Completed' : '🚗 Take Delivery'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function takeDelivery(id) {
+  if (!takenIds.includes(id)) {
+    takenIds.push(id);
+    localStorage.setItem('vol_taken', JSON.stringify(takenIds));
+    const btn = document.getElementById('btn-take-' + id);
+    if (btn) { btn.textContent = '✓ Completed'; btn.disabled = true; }
+    loadVolunteer();
+  }
+}
+
+function tickVolTimers() {
+  const stored = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  const all = [...seedData, ...stored];
+  all.forEach(r => {
+    const el = document.getElementById('vol-exp-' + r.id);
+    if (!el) return;
+    const e = getExpiryInfo(r.expires);
+    el.textContent = `⏰ Expires in: ${e.label}`;
+    el.className = `expiry-badge ${e.cls}`;
+  });
+}
+
+loadVolunteer();
+setInterval(tickVolTimers, 1000);
+window.addEventListener('storage', loadVolunteer);
+</script>
+</body>
+</html>
