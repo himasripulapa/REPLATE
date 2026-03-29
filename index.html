@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Replate — Rescue Food. Feed People.</title>
+<link rel="stylesheet" href="replate-shared.css"/>
+<style>
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:3rem;
+  padding:4rem 2.5rem 3rem;
+  background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 50%,#fef9f0 100%);
+  min-height:calc(100vh - 64px - 160px);
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:white;border:1.5px solid var(--border2);
+  border-radius:100px;padding:0.3rem 0.85rem;
+  font-size:0.78rem;font-weight:600;color:var(--green-dark);
+  margin-bottom:1.5rem;
+}
+
+.hero-h1{
+  font-size:clamp(2.2rem,4vw,3rem);
+  font-weight:800;color:var(--ink);
+  line-height:1.15;margin-bottom:1rem;
+}
+
+.hero-p{
+  font-size:0.95rem;color:var(--muted);
+  line-height:1.7;max-width:480px;margin-bottom:2rem;
+}
+
+.hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap;}
+
+.btn-hero-primary{
+  background:var(--green);color:white;
+  padding:0.75rem 1.6rem;border-radius:100px;
+  font-size:0.9rem;font-weight:700;border:none;
+  cursor:pointer;transition:all 0.2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.4rem;
+}
+.btn-hero-primary:hover{background:var(--green-dark);transform:translateY(-2px);box-shadow:0 6px 20px rgba(22,163,74,0.3);}
+
+.btn-hero-outline{
+  background:white;color:var(--ink);
+  padding:0.75rem 1.6rem;border-radius:100px;
+  font-size:0.9rem;font-weight:600;
+  border:1.5px solid var(--border);
+  cursor:pointer;transition:all 0.2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.4rem;
+}
+.btn-hero-outline:hover{border-color:var(--green);color:var(--green);}
+
+.hero-img{
+  border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow-lg);
+  aspect-ratio:4/3;background:#d1fae5;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.hero-img img{width:100%;height:100%;object-fit:cover;}
+.hero-img-placeholder{font-size:4rem;opacity:0.3;}
+
+/* ── STATS BAR ── */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:white;border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.stats-bar-item{
+  padding:1.5rem 2rem;
+  border-right:1px solid var(--border);
+  display:flex;align-items:center;gap:1rem;
+}
+.stats-bar-item:last-child{border-right:none;}
+.stats-bar-ico{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--green-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+}
+.stats-bar-num{font-size:1.5rem;font-weight:800;color:var(--ink);line-height:1;}
+.stats-bar-label{font-size:0.75rem;color:var(--muted);font-weight:500;margin-top:0.1rem;}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:4rem 2.5rem;background:white;}
+.section-title{font-size:1.5rem;font-weight:800;color:var(--ink);text-align:center;margin-bottom:0.5rem;}
+.section-sub{color:var(--muted);font-size:0.9rem;text-align:center;margin-bottom:3rem;}
+
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:900px;margin:0 auto;}
+.step-card{text-align:center;padding:2rem 1.5rem;}
+.step-num{
+  width:52px;height:52px;border-radius:14px;
+  background:var(--green-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin:0 auto 1rem;
+}
+.step-title{font-weight:700;font-size:0.95rem;color:var(--ink);margin-bottom:0.4rem;}
+.step-desc{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+.step-arrow{
+  display:flex;align-items:center;justify-content:center;
+  padding-top:3.5rem;font-size:1.5rem;color:var(--border);
+}
+
+/* ── CTA STRIP ── */
+.cta-strip{
+  background:var(--green);
+  padding:3rem 2.5rem;
+  text-align:center;
+}
+.cta-strip h2{font-size:1.75rem;font-weight:800;color:white;margin-bottom:0.5rem;}
+.cta-strip p{color:rgba(255,255,255,0.8);font-size:0.9rem;margin-bottom:1.5rem;}
+.btn-cta-white{
+  background:white;color:var(--green-dark);
+  padding:0.75rem 2rem;border-radius:100px;
+  font-size:0.9rem;font-weight:700;border:none;cursor:pointer;
+  transition:all 0.2s;text-decoration:none;display:inline-block;
+}
+.btn-cta-white:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.15);}
+
+footer{
+  background:white;border-top:1px solid var(--border);
+  padding:1.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.78rem;color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-ico">🌿</div>
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">Replate</div>
+      <div class="nav-brand-tagline">Rescue food. Feed people.</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">🏠 <span>Home</span></a>
+    <a href="report.html" class="nav-link">➕ <span>Report Food</span></a>
+    <a href="listings.html" class="nav-link">📍 <span>Live Listings</span></a>
+    <a href="ngo.html" class="nav-link">🏢 <span>NGO Dashboard</span></a>
+    <a href="volunteer.html" class="nav-link">🚗 <span>Volunteer</span></a>
+    <a href="impact.html" class="nav-link">📊 <span>Impact</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero fade-up">
+  <div>
+    <div class="hero-eyebrow">🌿 Replate.so • Event to NGO to Volunteer</div>
+    <h1 class="hero-h1">Save leftover food<br>before it expires.</h1>
+    <p class="hero-p">Event hosts and local reporters can instantly notify nearby NGOs. Once accepted, Replate auto-assigns the nearest volunteer for delivery.</p>
+    <div class="hero-actions">
+      <a href="report.html" class="btn-hero-primary">🌿 Report Food Now</a>
+      <a href="listings.html" class="btn-hero-outline">📍 View Live Listings</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&q=80" alt="Food rescue volunteers" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <div class="hero-img-placeholder" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">🍽️</div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-item">
+    <div class="stats-bar-ico">🌿</div>
+    <div><div class="stats-bar-num" id="s1">2,340</div><div class="stats-bar-label">Meals Rescued</div></div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-ico">👥</div>
+    <div><div class="stats-bar-num" id="s2">1,120</div><div class="stats-bar-label">People Fed</div></div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-ico">♻️</div>
+    <div><div class="stats-bar-num" id="s3">850 kg</div><div class="stats-bar-label">Food Waste Reduced</div></div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-ico">🚗</div>
+    <div><div class="stats-bar-num" id="s4">14</div><div class="stats-bar-label">Active Rescues</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2 class="section-title">How Replate Works</h2>
+  <p class="section-sub">Three simple steps to rescue food and feed people in your community</p>
+  <div style="display:flex;align-items:flex-start;max-width:900px;margin:0 auto;">
+    <div class="steps-grid" style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:start;width:100%;">
+      <div class="step-card">
+        <div class="step-num">📢</div>
+        <div class="step-title">Report Surplus Food</div>
+        <div class="step-desc">Event hosts or passersby report leftover food with location, quantity, and expiry time.</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">🏢</div>
+        <div class="step-title">NGO Gets Notified</div>
+        <div class="step-desc">Nearby NGOs receive instant alerts and can accept the food rescue request within minutes.</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">🚗</div>
+        <div class="step-title">Volunteer Delivers</div>
+        <div class="step-desc">A nearby volunteer picks up and delivers the food to the NGO before it expires.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <h2>Every plate you save feeds a real person.</h2>
+  <p>Join 320+ volunteers and 47 NGOs already fighting food waste in your city.</p>
+  <a href="report.html" class="btn-cta-white">Start Rescuing Food →</a>
+</div>
+
+<footer>
+  <span>© 2025 Replate · Fighting food waste, one plate at a time 🌿</span>
+  <span>Hyderabad, India</span>
+</footer>
+
+<script>
+// Animate counters
+function animateCount(el, target, suffix='') {
+  let start = 0;
+  const isFloat = target % 1 !== 0;
+  const duration = 1800;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = Math.floor(ease * target);
+    el.textContent = val.toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString() + suffix;
+  };
+  requestAnimationFrame(step);
+}
+
+window.addEventListener('load', () => {
+  // Read from localStorage if available (shared state)
+  const stored = JSON.parse(localStorage.getItem('replate_stats') || '{}');
+  const meals = (stored.meals || 2340);
+  const people = (stored.people || 1120);
+  const kg = (stored.kg || 850);
+  const rescues = (stored.rescues || 14);
+
+  document.getElementById('s1').textContent = meals.toLocaleString();
+  document.getElementById('s2').textContent = people.toLocaleString();
+  document.getElementById('s3').textContent = kg + ' kg';
+  document.getElementById('s4').textContent = rescues;
+});
+</script>
+</body>
+</html>
