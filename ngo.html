@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NGO Dashboard — Replate</title>
+<link rel="stylesheet" href="replate-shared.css"/>
+<style>
+.ngo-wrap{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+/* NGO selector */
+.ngo-select-row{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:1.75rem;
+}
+.ngo-select-row label{font-size:0.85rem;font-weight:700;color:var(--ink2);white-space:nowrap;}
+.ngo-select{
+  background:white;border:1.5px solid var(--border);border-radius:8px;
+  padding:0.6rem 2.5rem 0.6rem 0.9rem;
+  font-family:'Inter',sans-serif;font-size:0.88rem;color:var(--ink);
+  outline:none;cursor:pointer;min-width:280px;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.85rem center;
+  transition:border-color 0.15s;
+}
+.ngo-select:focus{border-color:var(--green);}
+
+/* kpi row */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;}
+.kpi-card{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  padding:1.5rem;
+}
+.kpi-num{font-size:2.2rem;font-weight:800;color:var(--ink);line-height:1;}
+.kpi-label{font-size:0.85rem;color:var(--muted);font-weight:500;margin-top:0.2rem;}
+.kpi-sub{font-size:0.75rem;color:var(--muted);margin-top:0.25rem;}
+
+/* request cards */
+.req-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;}
+
+.req-card{
+  background:white;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  overflow:hidden;transition:box-shadow 0.15s;
+}
+.req-card:hover{box-shadow:var(--shadow-md);}
+
+.req-card-body{padding:1.25rem 1.5rem;}
+.req-card-title{font-weight:700;font-size:1rem;color:var(--ink);}
+.req-card-reporter{font-size:0.78rem;color:var(--muted);margin-top:0.1rem;}
+
+.req-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.85rem 0;}
+.rstat{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--ink2);}
+
+.req-address{font-size:0.75rem;color:var(--muted);line-height:1.5;margin:0.25rem 0;}
+
+.req-card-footer{
+  padding:0.85rem 1.5rem;
+  background:#f9fafb;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.dist-label{font-size:0.75rem;color:var(--muted);}
+
+.req-actions{display:flex;gap:0.5rem;}
+.btn-accept-ngo{
+  background:var(--green);color:white;border:none;
+  padding:0.45rem 1rem;border-radius:6px;
+  font-size:0.8rem;font-weight:600;cursor:pointer;
+  transition:all 0.15s;font-family:'Inter',sans-serif;
+}
+.btn-accept-ngo:hover{background:var(--green-dark);}
+.btn-accept-ngo:disabled{background:#9ca3af;cursor:not-allowed;}
+.btn-decline-ngo{
+  background:white;color:var(--muted);
+  border:1px solid var(--border);
+  padding:0.45rem 0.85rem;border-radius:6px;
+  font-size:0.8rem;font-weight:600;cursor:pointer;
+  transition:all 0.15s;font-family:'Inter',sans-serif;
+}
+.btn-decline-ngo:hover{border-color:var(--red);color:var(--red);}
+
+.empty-state{
+  text-align:center;padding:4rem 2rem;
+  grid-column:1/-1;color:var(--muted);
+}
+
+/* progress bar */
+.prog-wrap{margin:0.5rem 0;}
+.prog-label{display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;}
+.prog-bar{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;background:var(--green);transition:width 0.3s;}
+.prog-fill.urgent{background:var(--orange);}
+.prog-fill.expired{background:var(--red);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-ico">🌿</div>
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">Replate</div>
+      <div class="nav-brand-tagline">Rescue food. Feed people.</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">🏠 <span>Home</span></a>
+    <a href="report.html" class="nav-link">➕ <span>Report Food</span></a>
+    <a href="listings.html" class="nav-link">📍 <span>Live Listings</span></a>
+    <a href="ngo.html" class="nav-link active">🏢 <span>NGO Dashboard</span></a>
+    <a href="volunteer.html" class="nav-link">🚗 <span>Volunteer</span></a>
+    <a href="impact.html" class="nav-link">📊 <span>Impact</span></a>
+  </div>
+</nav>
+
+<div class="ngo-wrap fade-up">
+
+  <!-- NGO Selector -->
+  <div class="ngo-select-row">
+    <label>Select NGO</label>
+    <select class="ngo-select" id="ngo-select" onchange="loadNGO()">
+      <option value="Helping Plates Foundation">Helping Plates Foundation</option>
+      <option value="Akshaya Patra">Akshaya Patra</option>
+      <option value="Robin Hood Army">Robin Hood Army</option>
+      <option value="No Food Waste NGO">No Food Waste NGO</option>
+      <option value="The Hunger Project">The Hunger Project</option>
+    </select>
+  </div>
+
+  <!-- KPI row -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-num" id="kpi-available">0</div>
+      <div class="kpi-label">Available Nearby</div>
+      <div class="kpi-sub">Waiting for acceptance</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" id="kpi-assigned">0</div>
+      <div class="kpi-label">Volunteer Assigned</div>
+      <div class="kpi-sub">Accepted and in transit</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" id="kpi-delivered">0</div>
+      <div class="kpi-label">Delivered</div>
+      <div class="kpi-sub">Completed rescues</div>
+    </div>
+  </div>
+
+  <!-- Request cards -->
+  <div class="req-grid" id="req-grid">
+    <div class="empty-state">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">🍽️</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--ink2);margin-bottom:0.4rem;">No requests yet</div>
+      <p style="font-size:0.82rem;">When food is reported nearby, it will appear here.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const NGO_LOCATIONS = {
+  'Helping Plates Foundation': { lat:12.9352, lng:77.6245 },
+  'Akshaya Patra':             { lat:17.4480, lng:78.3880 },
+  'Robin Hood Army':           { lat:17.3950, lng:78.4867 },
+  'No Food Waste NGO':         { lat:17.4920, lng:78.3760 },
+  'The Hunger Project':        { lat:17.4067, lng:78.4777 },
+};
+
+function haversine(lat1,lng1,lat2,lng2) {
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return +(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(2);
+}
+
+const seedData = [
+  { id:'seed1', event:'Sharma Wedding', name:'Riya Event Manager', foodType:'Veg Meals', qty:120, unit:'plates', addr:'Church Street, Bengaluru', city:'Bengaluru', lat:12.9716, lng:77.5946, expires: new Date(Date.now()-1000*60*60).toISOString(), peopleFed:130, wasteKg:65, status:'Delivered' },
+  { id:'seed2', event:'Community Lunch', name:'sree', foodType:'Veg Meals', qty:50, unit:'plates', addr:'flat no:101, srivani nagar, second apartment to left, opp venkatadhri residency, beside srinandam nilayam, behind transfromer, vijaywada', city:'Vijayawada', lat:16.5062, lng:80.6480, expires: new Date(Date.now()+27*60*60*1000).toISOString(), peopleFed:50, wasteKg:17.5, status:'Delivered' },
+];
+
+let acceptedIds = JSON.parse(localStorage.getItem('ngo_accepted') || '[]');
+let declinedIds = JSON.parse(localStorage.getItem('ngo_declined') || '[]');
+
+function getExpiryInfo(expiresStr) {
+  if (!expiresStr) return { label:'Unknown', cls:'expiry-ok', pct:50, pgCls:'' };
+  const exp = new Date(expiresStr);
+  const now = new Date();
+  const diff = Math.round((exp - now) / 60000);
+  if (diff <= 0) return { label:'Expired', cls:'expiry-expired', pct:0, pgCls:'expired' };
+  const h = Math.floor(diff/60), m = diff%60, s = Math.floor((exp-now)/1000)%60;
+  const label = h>0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
+  const pct = Math.min(100, Math.round((diff/(6*60))*100));
+  return { label, cls: diff<90?'expiry-urgent':'expiry-ok', pct, pgCls: diff<90?'urgent':'' };
+}
+
+function loadNGO() {
+  const ngo = document.getElementById('ngo-select').value;
+  const ngoCoords = NGO_LOCATIONS[ngo] || { lat:12.9716, lng:77.5946 };
+  const stored = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  const all = [...seedData, ...stored];
+  const radius = 20;
+
+  const nearby = all
+    .map(r => ({
+      ...r,
+      distFromNgo: haversine(ngoCoords.lat, ngoCoords.lng, r.lat || 12.97, r.lng || 77.59)
+    }))
+    .filter(r => r.distFromNgo <= radius)
+    .sort((a,b) => new Date(b.submittedAt||0) - new Date(a.submittedAt||0));
+
+  // KPIs
+  const delivered = nearby.filter(r => r.status==='Delivered' || acceptedIds.includes(r.id)).length;
+  const available = nearby.filter(r => !acceptedIds.includes(r.id) && !declinedIds.includes(r.id) && r.status!=='Delivered').length;
+
+  document.getElementById('kpi-available').textContent = available;
+  document.getElementById('kpi-assigned').textContent = 0;
+  document.getElementById('kpi-delivered').textContent = delivered;
+
+  if (nearby.length === 0) {
+    document.getElementById('req-grid').innerHTML = `<div class="empty-state">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">🍽️</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--ink2);">No requests within ${radius} km</div>
+      <p style="font-size:0.82rem;margin-top:0.25rem;">Reports submitted will appear here automatically.</p>
+    </div>`;
+    return;
+  }
+
+  const isAccepted = (id) => acceptedIds.includes(id) || ['seed1','seed2'].includes(id);
+  const exp = (r) => getExpiryInfo(r.expires);
+
+  document.getElementById('req-grid').innerHTML = nearby.map(r => {
+    const e = exp(r);
+    const accepted = isAccepted(r.id);
+    const declined = declinedIds.includes(r.id);
+
+    return `<div class="req-card" id="card-${r.id}">
+      <div class="req-card-body">
+        <div class="req-card-top" style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="req-card-title">${r.foodType}</div>
+            <div class="req-card-reporter">Reporter: ${r.name || r.event}</div>
+          </div>
+          <span class="badge ${accepted ? 'badge-gray' : 'badge-green'}">${accepted ? 'Delivered' : r.status || 'Available'}</span>
+        </div>
+        <div class="req-stats">
+          <div class="rstat">🍽️ ${r.qty} ${r.unit}</div>
+          <div class="rstat">👥 People fed: ${r.peopleFed || Math.round(r.qty*0.95)}</div>
+          <div class="rstat" style="grid-column:1/-1;">
+            <span style="font-size:0.9rem;">📍</span>
+            <span class="req-address">${r.addr}</span>
+          </div>
+          <div class="rstat">♻️ Waste reduced: ${r.wasteKg || (r.qty*0.35).toFixed(1)} kg</div>
+        </div>
+        <span class="expiry-badge ${e.cls}" id="ngo-exp-${r.id}">⏰ Expires in: ${e.label}</span>
+        <div class="prog-wrap">
+          <div class="prog-bar"><div class="prog-fill ${e.pgCls}" style="width:${e.pct}%"></div></div>
+        </div>
+      </div>
+      <div class="req-card-footer">
+        <span class="dist-label">Distance from NGO: ${r.distFromNgo} km</span>
+        <div class="req-actions">
+          ${accepted || declined ? `<span class="badge badge-gray">${accepted ? '✓ Accepted' : 'Declined'}</span>` :
+            `<button class="btn-accept-ngo" onclick="acceptReq('${r.id}')">✓ Accept</button>
+             <button class="btn-decline-ngo" onclick="declineReq('${r.id}')">Decline</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function acceptReq(id) {
+  if (!acceptedIds.includes(id)) {
+    acceptedIds.push(id);
+    localStorage.setItem('ngo_accepted', JSON.stringify(acceptedIds));
+    loadNGO();
+  }
+}
+
+function declineReq(id) {
+  if (!declinedIds.includes(id)) {
+    declinedIds.push(id);
+    localStorage.setItem('ngo_declined', JSON.stringify(declinedIds));
+    loadNGO();
+  }
+}
+
+// Live countdown
+function tickNgoTimers() {
+  const stored = JSON.parse(localStorage.getItem('replate_reports') || '[]');
+  const all = [...seedData, ...stored];
+  all.forEach(r => {
+    const el = document.getElementById('ngo-exp-' + r.id);
+    if (!el) return;
+    const e = getExpiryInfo(r.expires);
+    el.textContent = `⏰ Expires in: ${e.label}`;
+    el.className = `expiry-badge ${e.cls}`;
+  });
+}
+
+loadNGO();
+setInterval(tickNgoTimers, 1000);
+window.addEventListener('storage', loadNGO);
+</script>
+</body>
+</html>
